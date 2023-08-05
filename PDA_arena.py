@@ -82,6 +82,7 @@ class Arena:
 
     def one_thousand_rounds(self):
         self.score = dict()
+        self.score['NO BODY'] = 0
         self.score[self.candidate1.name] = 0
         self.score[self.candidate2.name] = 0
         for _ in range(1000):
