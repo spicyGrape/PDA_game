@@ -30,6 +30,7 @@ class Arena:
 
     def __init__(self, bot1, bot2):
         self.round = 0
+        self.score = dict()
         candidate1 = Fighter(bot1)
         candidate2 = Fighter(bot2)
         self.candidate1 = candidate1
@@ -81,7 +82,6 @@ class Arena:
         return False
 
     def one_thousand_rounds(self):
-        self.score = dict()
         self.score['NO BODY'] = 0
         self.score[self.candidate1.name] = 0
         self.score[self.candidate2.name] = 0
