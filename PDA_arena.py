@@ -31,8 +31,10 @@ class Fighter:
 
 class Arena:
 
-    def __init__(self, candidate1: Fighter, candidate2: Fighter):
+    def __init__(self, bot1, bot2):
         self.round = 0
+        candidate1 = Fighter(bot1)
+        candidate2 = Fighter(bot2)
         self.candidate1 = candidate1
         self.candidate2 = candidate2
         self.round = 1
@@ -57,9 +59,9 @@ class Arena:
                 self.congratulate()
 
     def commentator(self):
-        print('Round {}, candidate1 decide to {} while candidate2 decide to {}.'.format(self.round,
-                                                                                        self.candidate1.action,
-                                                                                        self.candidate2.action))
+        print('Round {}, candidate1 decide to {:<7} while candidate2 decide to {:<7}.'.format(self.round,
+                                                                                                 self.candidate1.action,
+                                                                                                 self.candidate2.action))
 
     def is_anyone_win(self) -> bool:
         if self.candidate1.energy < 0:
@@ -80,9 +82,6 @@ class Arena:
         return False
 
 
-bot1 = Meower()
-bot2 = Meower()
-candidate1 = Fighter(bot1)
-candidate2 = Fighter(bot2)
-arena = Arena(candidate1, candidate2)
+'''以下为Arena使用范例'''
+arena = Arena(Meower(), Meower())
 arena.battle_loop()
