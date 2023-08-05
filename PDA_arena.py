@@ -32,15 +32,19 @@ class Fighter:
 
 class Arena:
 
-    def __int__(self, candidate1: Fighter, candidate2: Fighter):
+    def __init__(self, candidate1: Fighter, candidate2: Fighter):
         self.round = 0
         self.candidate1 = candidate1
         self.candidate2 = candidate2
         self.round = 1
-        self.winner = ''
+        self.winner = None
         self.candidate1.action = 'Prepare'
         self.candidate2.action = 'Prepare'
+        self.commentator()
         return
+
+    def congratulate(self):
+        print('{} win the game!'.format(self.winner))
 
     def battle_loop(self):
         while not self.winner:
@@ -49,6 +53,9 @@ class Arena:
             self.candidate2.action_old = self.candidate2.action
             self.candidate1.update(self.candidate2.action_old)
             self.candidate2.update(self.candidate1.action_old)
+            self.commentator()
+            if self.is_anyone_win():
+                self.congratulate()
 
     def commentator(self):
         print('Round {}, candidate1 decide to {} while candidate2 decide to {}.'.format(self.round,
@@ -62,3 +69,21 @@ class Arena:
         elif self.candidate2.energy < 0:
             self.winner = self.candidate1.name
             return True
+        elif self.candidate1.action == 'Prepare' and self.candidate2.action == 'Attack':
+            self.winner = self.candidate2.name
+            return True
+        elif self.candidate2.action == 'Prepare' and self.candidate1.action == 'Attack':
+            self.winner = self.candidate1.name
+            return True
+        elif self.round > 100:
+            self.winner = 'NO BODY'
+            return True
+        return False
+
+
+bot1 = Meower()
+bot2 = Meower()
+candidate1 = Fighter(bot1)
+candidate2 = Fighter(bot2)
+arena = Arena(candidate1, candidate2)
+arena.battle_loop()
