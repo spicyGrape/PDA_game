@@ -1,9 +1,9 @@
 import random
 class Meower:
 
-    def __init__(self):
+    def __init__(self, name='SillyB'):
         self.agentEnergy = 0
-        self.name = 'SillyB'
+        self.name = name
 
     def update(self, act: str) -> str:
         if self.agentEnergy >= 3:

@@ -1,6 +1,3 @@
-from bot_myc import *
-
-
 class Fighter:
     def __init__(self, bot):
         self.energy = 0
@@ -48,6 +45,8 @@ class Arena:
         print('{} win the game!'.format(self.winner))
 
     def battle_loop(self):
+        self.winner = False
+        self.round = 0
         while not self.winner:
             self.round += 1
             self.candidate1.action_old = self.candidate1.action
@@ -60,8 +59,8 @@ class Arena:
 
     def commentator(self):
         print('Round {}, candidate1 decide to {:<7} while candidate2 decide to {:<7}.'.format(self.round,
-                                                                                                 self.candidate1.action,
-                                                                                                 self.candidate2.action))
+                                                                                              self.candidate1.action,
+                                                                                              self.candidate2.action))
 
     def is_anyone_win(self) -> bool:
         if self.candidate1.energy < 0:
@@ -81,7 +80,19 @@ class Arena:
             return True
         return False
 
+    def one_thousand_rounds(self):
+        self.score = dict()
+        self.score[self.candidate1.name] = 0
+        self.score[self.candidate2.name] = 0
+        for _ in range(1000):
+            self.battle_loop()
+            self.score[self.winner] += 1
+        print('Final score {} to {}'.format(self.score[self.candidate1.name], self.score[self.candidate2.name]))
+
 
 '''以下为Arena使用范例'''
-arena = Arena(Meower(), Meower())
+from bot_myc import *
+
+arena = Arena(Meower(), Meower('SillyA'))
 arena.battle_loop()
+arena.one_thousand_rounds()
