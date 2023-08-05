@@ -1,60 +1,64 @@
 import random
+from bot_myc import *
+
+
+class Fighter:
+    def __init__(self, bot):
+        self.energy = 0
+        self.action = 'Prepare'
+        self.action_old = 'Prepare'
+        self.strategy = bot.update
+        self.name = bot.name
+
+    def prepare(self):
+        self.energy += 1
+
+    def attack(self):
+        self.energy -= 3
+
+    def defend(self):
+        self.energy -= 1
+
+    def update(self, enemy_action_old: str) -> str:
+        self.action = self.strategy(enemy_action_old)
+        if self.action == 'Prepare':
+            self.prepare()
+        elif self.action == "Attack":
+            self.attack()
+        elif self.action == 'Defend':
+            self.defend()
+        return self.action
 
 
 class Arena:
 
-    def __int__(self, candidate1, candidate2):
+    def __int__(self, candidate1: Fighter, candidate2: Fighter):
         self.round = 0
         self.candidate1 = candidate1
         self.candidate2 = candidate2
         self.round = 1
-        self.anyone_win = False
-        self.action1 = 'Prepare'
-        self.action2 = 'Prepare'
+        self.winner = ''
+        self.candidate1.action = 'Prepare'
+        self.candidate2.action = 'Prepare'
         return
 
     def battle_loop(self):
-
-        while not self.anyone_win:
+        while not self.winner:
             self.round += 1
+            self.candidate1.action_old = self.candidate1.action
+            self.candidate2.action_old = self.candidate2.action
+            self.candidate1.update(self.candidate2.action_old)
+            self.candidate2.update(self.candidate1.action_old)
 
     def commentator(self):
-        print('Round {}, candidate1 decide to {} while candidate2 decide to {}.'.format(self.round, self.action1, self.action2))
+        print('Round {}, candidate1 decide to {} while candidate2 decide to {}.'.format(self.round,
+                                                                                        self.candidate1.action,
+                                                                                        self.candidate2.action))
 
-
-class Fighter:
-    def __init__(self):
-        self.energy = 0
-        self.action = 'Prepare'
-
-
-
-class Meower:
-    """"毛奕澄的BOT"""
-
-    def __init__(self):
-        self.agentEnergy = 0
-
-    def update(self, act: str) -> str:
-        if self.agentEnergy >= 3:
-            temp = random.random()
-            if temp > 0.6:
-                self.agentEnergy -= 3
-                return "Attack"
-            elif temp > 0.2:
-                self.agentEnergy -= 1
-                return "Defend"
-            else:
-                self.agentEnergy += 1
-                return "Prepare"
-        elif self.agentEnergy >= 1:
-            temp = random.random()
-            if temp > 0.6:
-                self.agentEnergy -= 1
-                return "Defend"
-            else:
-                self.agentEnergy += 1
-                return "Prepare"
-        else:
-            self.agentEnergy += 1
-            return "Prepare"
+    def is_anyone_win(self) -> bool:
+        if self.candidate1.energy < 0:
+            self.winner = self.candidate2.name
+            return True
+        elif self.candidate2.energy < 0:
+            self.winner = self.candidate1.name
+            return True
