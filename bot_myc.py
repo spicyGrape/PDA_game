@@ -23,6 +23,8 @@ class QLAgent:
     value:reward
     '''
 
+
+
     def __init__(self, name="Shitting Lee", path="./agent,json") -> None:
         self.name = name
         self.agentAction = "None"
@@ -188,6 +190,7 @@ class QLAgent:
 class Meower:
     def __init__(self,name="Silly Meow") -> None:
         self.agentEnergy = 0
+
         self.name = name
 
     def update(self, act: str) -> str:
