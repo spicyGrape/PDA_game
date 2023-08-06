@@ -1,6 +1,7 @@
 import random
 import json
 
+
 class QLAgent:
     RTable = {
         ("Prepare", "Prepare"): -0.05,
@@ -22,8 +23,6 @@ class QLAgent:
     key:(agentAction,enemyAction)
     value:reward
     '''
-
-
 
     def __init__(self, name="Shitting Lee", path="./agent,json") -> None:
         self.name = name
@@ -53,7 +52,7 @@ class QLAgent:
         self.enemyEnergy = 0
 
     def __state(self) -> str:
-        return str(self.agentEnergy)+'_'+str(self.enemyEnergy)
+        return str(self.agentEnergy) + '_' + str(self.enemyEnergy)
 
     def __default_policy(self, act: str) -> str:
         if self.agentEnergy >= 3:
@@ -81,7 +80,7 @@ class QLAgent:
 
     def __action_space(self) -> tuple:
         if self.agentEnergy >= 3:
-            return ("Attack", "Defend", "Prepare")
+            return "Attack", "Defend", "Prepare"
         elif self.agentEnergy >= 1:
             return ("Defend", "Prepare")
         else:
@@ -111,7 +110,7 @@ class QLAgent:
                 nextEnemyEnergy = self.enemyEnergy - 1
             case "Attack":
                 nextEnemyEnergy = self.enemyEnergy - 3
-        return str(nextAgentEnergy)+"_"+str(nextEnemyEnergy)
+        return str(nextAgentEnergy) + "_" + str(nextEnemyEnergy)
 
     def update(self, act: str) -> str:
         self.enemyAction = act
@@ -124,7 +123,7 @@ class QLAgent:
         if len(q) > 0:
             agentAction = max(q)
         else:
-            agentAction = self.__default_policy(self, act)
+            agentAction = self.__default_policy(act)
 
         self.agentEnergy += self.__energy_delta(act)
 
@@ -180,16 +179,17 @@ class QLAgent:
                     q_s_a_ = q_[max(q_)]
 
                 self.QTable[s][agentCurAct] = q_s_a + \
-                    self.alpha*(r+self.gamma*q_s_a_-q_s_a)
+                                              self.alpha * (r + self.gamma * q_s_a_ - q_s_a)
         return
 
     def output(self, path="./agent.json") -> None:
         with open(path, 'w+') as f:
             json.dump(self.QTable, f)
 
+
 class Meower:
-    def __init__(self,name="Silly Meow") -> None:
-        self.agentEnergy = 0
+    def __init__(self, name="Silly Meow") -> None:
+        self.agentEnergy = 1
 
         self.name = name
 
@@ -216,6 +216,7 @@ class Meower:
         else:
             self.agentEnergy += 1
             return "Prepare"
+
 
 if __name__ == "__main__":
     pass

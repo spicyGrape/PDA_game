@@ -81,19 +81,25 @@ class Arena:
             return True
         return False
 
-    def one_thousand_rounds(self):
+    def multiple_rounds(self, rounds=1000):
         self.score['NO BODY'] = 0
         self.score[self.candidate1.name] = 0
         self.score[self.candidate2.name] = 0
-        for _ in range(1000):
+        for _ in range(rounds):
             self.battle_loop()
             self.score[self.winner] += 1
         print('Final score {} to {}'.format(self.score[self.candidate1.name], self.score[self.candidate2.name]))
+        if self.score[self.candidate1.name] > self.score[self.candidate2.name]:
+            print('{} beat {} by {:.2%}!'.format(self.candidate1.name, self.candidate2.name, (
+                    self.score[self.candidate1.name] - self.score[self.candidate2.name]) / rounds))
+        elif self.score[self.candidate1.name] < self.score[self.candidate2.name]:
+            print('{} beat {} by {:.2%}!'.format(self.candidate2.name, self.candidate1.name, (
+                    self.score[self.candidate2.name] - self.score[self.candidate1.name]) / rounds))
 
 
 '''以下为Arena使用范例'''
 from bot_myc import *
 
-arena = Arena(Meower(), Meower('SillyA'))
+arena = Arena(Meower(), QLAgent())
 arena.battle_loop()
-arena.one_thousand_rounds()
+arena.multiple_rounds(100000)
