@@ -119,7 +119,7 @@ class QLAgent:
         else:
             agentAction = self.__default_policy(act)
 
-        self.agentEnergy += self.__energy_delta(act)
+        self.agentEnergy += self.__energy_delta(agentAction)
 
         return agentAction
 
