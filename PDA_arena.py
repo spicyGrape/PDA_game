@@ -1,10 +1,11 @@
 class Fighter:
     def __init__(self, bot):
-        self.energy = 0
+        fighter = bot()
+        self.energy = 1
         self.action = 'Prepare'
         self.action_old = 'Prepare'
-        self.strategy = bot.update
-        self.name = bot.name
+        self.strategy = fighter.update
+        self.name = fighter.name
 
     def prepare(self):
         self.energy += 1
@@ -29,10 +30,11 @@ class Fighter:
 class Arena:
 
     def __init__(self, bot1, bot2):
-        self.round = 0
+        self.bot1 = bot1
+        self.bot2 = bot2
         self.score = dict()
-        candidate1 = Fighter(bot1)
-        candidate2 = Fighter(bot2)
+        candidate1 = Fighter(self.bot1)
+        candidate2 = Fighter(self.bot2)
         self.candidate1 = candidate1
         self.candidate2 = candidate2
         self.round = 1
@@ -46,8 +48,6 @@ class Arena:
         print('{} win the game!'.format(self.winner))
 
     def battle_loop(self):
-        self.winner = False
-        self.round = 0
         while not self.winner:
             self.round += 1
             self.candidate1.action_old = self.candidate1.action
@@ -59,9 +59,10 @@ class Arena:
                 self.congratulate()
 
     def commentator(self):
-        print('Round {}, candidate1 decide to {:<7} while candidate2 decide to {:<7}.'.format(self.round,
-                                                                                              self.candidate1.action,
-                                                                                              self.candidate2.action))
+        print('Round {}, {} decide to {:<7} while {} decide to {:<7}.'.format(self.round, self.candidate1.name,
+                                                                              self.candidate1.action,
+                                                                              self.candidate2.name,
+                                                                              self.candidate2.action))
 
     def is_anyone_win(self) -> bool:
         if self.candidate1.energy < 0:
@@ -81,19 +82,25 @@ class Arena:
             return True
         return False
 
-    def one_thousand_rounds(self):
+    def multiple_rounds(self, rounds=1000):
         self.score['NO BODY'] = 0
         self.score[self.candidate1.name] = 0
         self.score[self.candidate2.name] = 0
-        for _ in range(1000):
+        for _ in range(rounds):
             self.battle_loop()
             self.score[self.winner] += 1
         print('Final score {} to {}'.format(self.score[self.candidate1.name], self.score[self.candidate2.name]))
+        if self.score[self.candidate1.name] > self.score[self.candidate2.name]:
+            print('{} beat {} by {:.2%}!'.format(self.candidate1.name, self.candidate2.name, (
+                    self.score[self.candidate1.name] - self.score[self.candidate2.name]) / rounds))
+        elif self.score[self.candidate1.name] < self.score[self.candidate2.name]:
+            print('{} beat {} by {:.2%}!'.format(self.candidate2.name, self.candidate1.name, (
+                    self.score[self.candidate2.name] - self.score[self.candidate1.name]) / rounds))
 
 
 '''以下为Arena使用范例'''
 from bot_myc import *
 
-arena = Arena(Meower(), Meower('SillyA'))
+arena = Arena(Meower, QLAgent)
 arena.battle_loop()
-arena.one_thousand_rounds()
+# arena.multiple_rounds(100000)
