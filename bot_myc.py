@@ -58,29 +58,23 @@ class QLAgent:
         if self.agentEnergy >= 3:
             temp = random.random()
             if temp > 0.6:
-                self.agentEnergy -= 3
                 return "Attack"
             elif temp > 0.2:
-                self.agentEnergy -= 1
                 return "Defend"
             else:
-                self.agentEnergy += 1
                 return "Prepare"
         elif self.agentEnergy >= 1:
             temp = random.random()
             if temp > 0.6:
-                self.agentEnergy -= 1
                 return "Defend"
             else:
-                self.agentEnergy += 1
                 return "Prepare"
         else:
-            self.agentEnergy += 1
             return "Prepare"
 
     def __action_space(self) -> tuple:
         if self.agentEnergy >= 3:
-            return "Attack", "Defend", "Prepare"
+            return ("Attack", "Defend", "Prepare")
         elif self.agentEnergy >= 1:
             return ("Defend", "Prepare")
         else:
@@ -125,7 +119,7 @@ class QLAgent:
         else:
             agentAction = self.__default_policy(act)
 
-        self.agentEnergy += self.__energy_delta(act)
+        self.agentEnergy += self.__energy_delta(agentAction)
 
         return agentAction
 
