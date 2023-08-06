@@ -1,10 +1,11 @@
 class Fighter:
     def __init__(self, bot):
-        self.energy = 0
+        fighter = bot()
+        self.energy = 1
         self.action = 'Prepare'
         self.action_old = 'Prepare'
-        self.strategy = bot.update
-        self.name = bot.name
+        self.strategy = fighter.update
+        self.name = fighter.name
 
     def prepare(self):
         self.energy += 1
@@ -29,10 +30,11 @@ class Fighter:
 class Arena:
 
     def __init__(self, bot1, bot2):
-        self.round = 0
+        self.bot1 = bot1
+        self.bot2 = bot2
         self.score = dict()
-        candidate1 = Fighter(bot1)
-        candidate2 = Fighter(bot2)
+        candidate1 = Fighter(self.bot1)
+        candidate2 = Fighter(self.bot2)
         self.candidate1 = candidate1
         self.candidate2 = candidate2
         self.round = 1
@@ -46,8 +48,6 @@ class Arena:
         print('{} win the game!'.format(self.winner))
 
     def battle_loop(self):
-        self.winner = False
-        self.round = 0
         while not self.winner:
             self.round += 1
             self.candidate1.action_old = self.candidate1.action
@@ -59,9 +59,10 @@ class Arena:
                 self.congratulate()
 
     def commentator(self):
-        print('Round {}, candidate1 decide to {:<7} while candidate2 decide to {:<7}.'.format(self.round,
-                                                                                              self.candidate1.action,
-                                                                                              self.candidate2.action))
+        print('Round {}, {} decide to {:<7} while {} decide to {:<7}.'.format(self.round, self.candidate1.name,
+                                                                              self.candidate1.action,
+                                                                              self.candidate2.name,
+                                                                              self.candidate2.action))
 
     def is_anyone_win(self) -> bool:
         if self.candidate1.energy < 0:
@@ -100,6 +101,6 @@ class Arena:
 '''以下为Arena使用范例'''
 from bot_myc import *
 
-arena = Arena(Meower(), QLAgent())
+arena = Arena(Meower, QLAgent)
 arena.battle_loop()
-arena.multiple_rounds(100000)
+# arena.multiple_rounds(100000)

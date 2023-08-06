@@ -24,12 +24,12 @@ class QLAgent:
     value:reward
     '''
 
-    def __init__(self, name="Shitting Lee", path="./agent,json") -> None:
+    def __init__(self, name="Shitting Lee", path="./agent.json") -> None:
         self.name = name
-        self.agentAction = "None"
-        self.enemyAction = "None"
-        self.agentEnergy = 0
-        self.enemyEnergy = 0
+        self.agentAction = "Prepare"
+        self.enemyAction = "Prepare"
+        self.agentEnergy = 1
+        self.enemyEnergy = 1
 
         self.QTable = {}
         '''
@@ -46,9 +46,9 @@ class QLAgent:
             pass
 
     def __clear(self) -> None:
-        self.agentAction = "None"
-        self.enemyAction = "None"
-        self.agentEnergy = 0
+        self.agentAction = "Prepare"
+        self.enemyAction = "Prepare"
+        self.agentEnergy = 1
         self.enemyEnergy = 0
 
     def __state(self) -> str:
