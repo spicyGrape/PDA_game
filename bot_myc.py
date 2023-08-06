@@ -1,6 +1,7 @@
 import random
 import json
 
+
 class QLAgent:
     RTable = {
         ("Prepare", "Prepare"): -0.05,
@@ -79,7 +80,7 @@ class QLAgent:
 
     def __action_space(self) -> tuple:
         if self.agentEnergy >= 3:
-            return ("Attack", "Defend", "Prepare")
+            return "Attack", "Defend", "Prepare"
         elif self.agentEnergy >= 1:
             return ("Defend", "Prepare")
         else:
@@ -215,6 +216,7 @@ class Meower:
         else:
             self.agentEnergy += 1
             return "Prepare"
+
 
 if __name__ == "__main__":
     pass
