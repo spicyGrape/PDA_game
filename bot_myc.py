@@ -27,9 +27,9 @@ class QLAgent:
     def __init__(self, name="Shitting Lee", path="./agent.json") -> None:
         self.name = name
         self.agentAction = "Prepare"
-        self.enemyAction = "Prepare"
+        self.enemyAction = "None"
         self.agentEnergy = 1
-        self.enemyEnergy = 1
+        self.enemyEnergy = 0
 
         self.QTable = {}
         '''
@@ -47,7 +47,7 @@ class QLAgent:
 
     def __clear(self) -> None:
         self.agentAction = "Prepare"
-        self.enemyAction = "Prepare"
+        self.enemyAction = "None"
         self.agentEnergy = 1
         self.enemyEnergy = 0
 
@@ -179,7 +179,7 @@ class QLAgent:
                     q_s_a_ = q_[max(q_)]
 
                 self.QTable[s][agentCurAct] = q_s_a + \
-                                              self.alpha * (r + self.gamma * q_s_a_ - q_s_a)
+                    self.alpha * (r + self.gamma * q_s_a_ - q_s_a)
         return
 
     def output(self, path="./agent.json") -> None:
