@@ -83,9 +83,9 @@ class QLAgent:
 
     def __action_space(self) -> tuple:
         if self.agentEnergy >= 3:
-            return ("Attack", "Defend", "Prepare")
+            return "Attack", "Defend", "Prepare"
         elif self.agentEnergy >= 1:
-            return ("Defend", "Prepare")
+            return "Defend", "Prepare"
         else:
             return ("Prepare",)
 
@@ -136,7 +136,7 @@ class QLAgent:
 
         if random.random() > self.epsilon and len(q) > 0:
             # greedy
-            agentCurAct = arg_max (q)
+            agentCurAct = arg_max(q)
         else:
             # explore
             agentCurAct = random.choice(action_space)
@@ -176,7 +176,7 @@ class QLAgent:
                     q_s_a_ = q_[max(q_)]
 
                 self.QTable[s][agentCurAct] = q_s_a + \
-                    self.alpha * (r + self.gamma * q_s_a_ - q_s_a)
+                                              self.alpha * (r + self.gamma * q_s_a_ - q_s_a)
         return agentCurAct, ends
 
     def output(self, path="./agent.json") -> None:

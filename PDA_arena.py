@@ -44,6 +44,18 @@ class Arena:
         self.commentator()
         return
 
+    def reinit(self):
+        candidate1 = Fighter(self.bot1)
+        candidate2 = Fighter(self.bot2)
+        self.candidate1 = candidate1
+        self.candidate2 = candidate2
+        self.round = 1
+        self.winner = None
+        self.candidate1.action = 'Prepare'
+        self.candidate2.action = 'Prepare'
+        self.commentator()
+        return
+
     def congratulate(self):
         print('{} win the game!'.format(self.winner))
 
@@ -87,6 +99,7 @@ class Arena:
         self.score[self.candidate1.name] = 0
         self.score[self.candidate2.name] = 0
         for _ in range(rounds):
+            self.reinit()
             self.battle_loop()
             self.score[self.winner] += 1
         print('Final score {} to {}'.format(self.score[self.candidate1.name], self.score[self.candidate2.name]))
@@ -103,4 +116,4 @@ from bot_myc import *
 
 arena = Arena(Meower, QLAgent)
 arena.battle_loop()
-# arena.multiple_rounds(100000)
+arena.multiple_rounds(100000)
