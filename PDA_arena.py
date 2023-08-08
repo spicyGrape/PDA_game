@@ -1,11 +1,21 @@
+from tqdm import tqdm
+from bot_myc import *
+
+
 class Fighter:
     def __init__(self, bot):
-        fighter = bot()
+        self.fighter = bot
         self.energy = 1
         self.action = 'Prepare'
         self.action_old = 'Prepare'
-        self.strategy = fighter.update
-        self.name = fighter.name
+        self.strategy = self.fighter.update
+        self.name = self.fighter.name
+
+    def reinit(self):
+        self.fighter.reset()
+        self.energy = 1
+        self.action = 'Prepare'
+        self.action_old = 'Prepare'
 
     def prepare(self):
         self.energy += 1
@@ -45,10 +55,8 @@ class Arena:
         return
 
     def reinit(self):
-        candidate1 = Fighter(self.bot1)
-        candidate2 = Fighter(self.bot2)
-        self.candidate1 = candidate1
-        self.candidate2 = candidate2
+        self.candidate1.reinit()
+        self.candidate2.reinit()
         self.round = 1
         self.winner = None
         self.candidate1.action = 'Prepare'
@@ -57,7 +65,8 @@ class Arena:
         return
 
     def congratulate(self):
-        print('{} win the game!'.format(self.winner))
+        pass
+        # print('{} win the game!'.format(self.winner))
 
     def battle_loop(self):
         while not self.winner:
@@ -71,10 +80,11 @@ class Arena:
                 self.congratulate()
 
     def commentator(self):
-        print('Round {}, {} decide to {:<7} while {} decide to {:<7}.'.format(self.round, self.candidate1.name,
-                                                                              self.candidate1.action,
-                                                                              self.candidate2.name,
-                                                                              self.candidate2.action))
+        # print('Round {}, {} decide to {:<7} while {} decide to {:<7}.'.format(self.round, self.candidate1.name,
+        #                                                                       self.candidate1.action,
+        #                                                                       self.candidate2.name,
+        #                                                                       self.candidate2.action))
+        pass
 
     def is_anyone_win(self) -> bool:
         if self.candidate1.energy < 0:
@@ -89,7 +99,7 @@ class Arena:
         elif self.candidate2.action == 'Prepare' and self.candidate1.action == 'Attack':
             self.winner = self.candidate1.name
             return True
-        elif self.round > 100:
+        elif self.round > 1000:
             self.winner = 'NO BODY'
             return True
         return False
@@ -98,22 +108,23 @@ class Arena:
         self.score['NO BODY'] = 0
         self.score[self.candidate1.name] = 0
         self.score[self.candidate2.name] = 0
-        for _ in range(rounds):
+        for _ in tqdm(range(rounds)):
             self.reinit()
             self.battle_loop()
             self.score[self.winner] += 1
-        print('Final score {} to {}'.format(self.score[self.candidate1.name], self.score[self.candidate2.name]))
+        print('Final score {} to {}'.format(
+            self.score[self.candidate1.name], self.score[self.candidate2.name]))
         if self.score[self.candidate1.name] > self.score[self.candidate2.name]:
             print('{} beat {} by {:.2%}!'.format(self.candidate1.name, self.candidate2.name, (
-                    self.score[self.candidate1.name] - self.score[self.candidate2.name]) / rounds))
+                self.score[self.candidate1.name] - self.score[self.candidate2.name]) / rounds))
         elif self.score[self.candidate1.name] < self.score[self.candidate2.name]:
             print('{} beat {} by {:.2%}!'.format(self.candidate2.name, self.candidate1.name, (
-                    self.score[self.candidate2.name] - self.score[self.candidate1.name]) / rounds))
+                self.score[self.candidate2.name] - self.score[self.candidate1.name]) / rounds))
 
 
 '''以下为Arena使用范例'''
-from bot_myc import *
 
-arena = Arena(Meower, QLAgent)
-arena.battle_loop()
-arena.multiple_rounds(100000)
+arena = Arena(QLAgent(name="Baseline", path="baseline2.json"), QLAgent(
+    name="Challenger", path="agent.json"))
+# arena.battle_loop()
+arena.multiple_rounds(1000)

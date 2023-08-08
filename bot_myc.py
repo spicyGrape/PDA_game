@@ -10,26 +10,26 @@ def arg_max(dic: dict) -> str:
 class QLAgent:
     RTable = {
         ("Prepare", "Prepare"): 0.00,
-        ("Prepare", "Defend"): 0.00,
+        ("Prepare", "Defend"): 0.001,
         ("Prepare", "Attack"): -1,
 
-        ("Defend", "Prepare"): -0.01,
-        ("Defend", "Defend"): 0.00,
-        ("Defend", "Attack"): 0.02,
+        ("Defend", "Prepare"): -0.005,
+        ("Defend", "Defend"): 0,
+        ("Defend", "Attack"): 0.01,
 
         ("Attack", "Prepare"): 1,
-        ("Attack", "Defend"): -0.01,
+        ("Attack", "Defend"): -0.005,
         ("Attack", "Attack"): 0.01,
     }
     '''
     key:(agentAction,enemyAction)
     value:reward
     '''
-    alpha = 0.01
-    gamma = 0.9
-    epsilon = 0.5
+    alpha = 0.001
+    gamma = 0.5
+    epsilon = 0.1
 
-    def __init__(self, name="Shitting Lee", path="./agent.json", mode="play") -> None:
+    def __init__(self, name, path="./agent.json", mode="play") -> None:
         self.name = name
         self.agentEnergy = 1
         match mode:
@@ -51,6 +51,7 @@ class QLAgent:
                 self.QTable = json.load(f)
         except:
             pass
+        print(len(self.QTable))
 
     def __clear(self) -> None:
         self.agentEnergy = 1
@@ -83,9 +84,9 @@ class QLAgent:
 
     def __action_space(self) -> tuple:
         if self.agentEnergy >= 3:
-            return "Attack", "Defend", "Prepare"
+            return ("Attack", "Defend", "Prepare")
         elif self.agentEnergy >= 1:
-            return "Defend", "Prepare"
+            return ("Defend", "Prepare")
         else:
             return ("Prepare",)
 
@@ -176,7 +177,7 @@ class QLAgent:
                     q_s_a_ = q_[max(q_)]
 
                 self.QTable[s][agentCurAct] = q_s_a + \
-                                              self.alpha * (r + self.gamma * q_s_a_ - q_s_a)
+                    self.alpha * (r + self.gamma * q_s_a_ - q_s_a)
         return agentCurAct, ends
 
     def output(self, path="./agent.json") -> None:
@@ -184,38 +185,7 @@ class QLAgent:
             json.dump(self.QTable, f)
 
 
-class Meower:
-    def __init__(self, name="Silly Meow") -> None:
-        self.agentEnergy = 1
-
-        self.name = name
-
-    def update(self, act: str) -> str:
-        if self.agentEnergy >= 3:
-            temp = random.random()
-            if temp > 0.6:
-                self.agentEnergy -= 3
-                return "Attack"
-            elif temp > 0.2:
-                self.agentEnergy -= 1
-                return "Defend"
-            else:
-                self.agentEnergy += 1
-                return "Prepare"
-        elif self.agentEnergy >= 1:
-            temp = random.random()
-            if temp > 0.6:
-                self.agentEnergy -= 1
-                return "Defend"
-            else:
-                self.agentEnergy += 1
-                return "Prepare"
-        else:
-            self.agentEnergy += 1
-            return "Prepare"
-
-
-episode = 10000000
+episode = 1000000
 
 if __name__ == "__main__":
     """
@@ -232,7 +202,7 @@ if __name__ == "__main__":
     权重路径请自行考虑
     """
     learner = QLAgent("learner", "./agent.json", "train")
-    shitter = QLAgent("shitter")
+    shitter = QLAgent("shitter", "./None")
     # train
     learnerAction = "Prepare"
     shitterAction = "None"
