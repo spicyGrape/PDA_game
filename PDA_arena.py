@@ -1,5 +1,6 @@
 from tqdm import tqdm
 from bot_myc import *
+from human_game import *
 
 
 class Fighter:
@@ -80,11 +81,10 @@ class Arena:
                 self.congratulate()
 
     def commentator(self):
-        # print('Round {}, {} decide to {:<7} while {} decide to {:<7}.'.format(self.round, self.candidate1.name,
-        #                                                                       self.candidate1.action,
-        #                                                                       self.candidate2.name,
-        #                                                                       self.candidate2.action))
-        pass
+         print('Round {}, {} decide to {:<7} while {} decide to {:<7}.'.format(self.round, self.candidate1.name,
+                                                                               self.candidate1.action,
+                                                                               self.candidate2.name,
+                                                                               self.candidate2.action))
 
     def is_anyone_win(self) -> bool:
         if self.candidate1.energy < 0:
@@ -124,7 +124,6 @@ class Arena:
 
 '''以下为Arena使用范例'''
 
-arena = Arena(QLAgent(name="Baseline", path="baseline2.json"), QLAgent(
-    name="Challenger", path="agent.json"))
+arena = Arena(QLAgent(name="Baseline", path="baseline2.json"), Human())
 # arena.battle_loop()
-arena.multiple_rounds(1000)
+arena.battle_loop()
